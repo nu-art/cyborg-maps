@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2017 to Adam van der Kruk (Zehavi) AKA TacB0sS - Nu-Art Software
+ *
+ * This software code is not an 'Open Source'!
+ * In order to use this code you MUST have a proper license.
+ * In order to obtain a licence please contact me directly.
+ *
+ * Email: Adam.Zehavi@Nu-Art-Software.com
+ */
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    apply from: '../dev-tools/gradle/common-cyborg-lib.gradle'
+}
+//
+//if (project.hasProperty("configureUploadJavaArtifact")) {
+//    configureUploadJavaArtifact("com.nu-art-software.cyborg", "nu-art/${name}")
+//}
+
+dependencies {
+    compile(resolveDependency('cyborg-core', 'com.nu-art-software.cyborg', "${DEFAULT_DEPENDENCY_VERSION}"))
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+
+}
