@@ -6,6 +6,6 @@ package com.nu.art.cyborg.maps.google;
 
 public interface MyOnMapReadyCallback {
 
-	void mOnMapReadyCallback(int controllerId);
+	void onMapReady(int controllerId);
 }
 

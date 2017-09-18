@@ -5,11 +5,11 @@ import com.google.android.gms.maps.model.Marker;
 
 public interface OnMapClicks {
 
-	void mOnMapClickListener(int controllerId, LatLng latLng);
+	void onMapClick(int controllerId, LatLng latLng);
 
-	void mOnMapLongClickListener(int controllerId, LatLng latLng);
+	void onMapLongClick(int controllerId, LatLng latLng);
 
-	void mOnMarkerClickListener(int controllerId, Marker marker);
+	void onMarkerClick(int controllerId, Marker marker);
 
-	void mOnInfoWindowClickListener(int controllerId, Marker marker);
+	void onInfoWindowClick(int controllerId, Marker marker);
 }

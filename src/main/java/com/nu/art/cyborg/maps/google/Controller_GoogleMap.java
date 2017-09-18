@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.cyborg.core.CyborgController;
-import com.nu.art.cyborg.modules.LocationModule;
 import com.nu.art.cyborg.modules.LocationModule.OnLocationUpdatedListener;
 
 import java.util.ArrayList;
@@ -156,7 +155,6 @@ public class Controller_GoogleMap
 	public void onMapReady(GoogleMap googleMap) {
 		mGoogleMap = googleMap;
 		googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-		getModule(LocationModule.class).updateCurrentLocation();
 		mGoogleMap.setOnMapClickListener(this);
 		mGoogleMap.setOnMapLongClickListener(this);
 		mGoogleMap.setOnMarkerClickListener(this);
@@ -165,7 +163,7 @@ public class Controller_GoogleMap
 		dispatchEvent("Map event MAP_READY was called.", MyOnMapReadyCallback.class, new Processor<MyOnMapReadyCallback>() {
 			@Override
 			public void process(MyOnMapReadyCallback listener) {
-				listener.mOnMapReadyCallback(getRootView().getId());
+				listener.onMapReady(getRootView().getId());
 			}
 		});
 	}
@@ -218,7 +216,7 @@ public class Controller_GoogleMap
 		dispatchEvent("Map event MAP_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
 			@Override
 			public void process(OnMapClicks listener) {
-				listener.mOnMapClickListener(getRootView().getId(), latLng);
+				listener.onMapClick(getRootView().getId(), latLng);
 			}
 		});
 	}
@@ -228,7 +226,7 @@ public class Controller_GoogleMap
 		dispatchEvent("Map event MAP_LONG_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
 			@Override
 			public void process(OnMapClicks listener) {
-				listener.mOnMapLongClickListener(getRootView().getId(), latLng);
+				listener.onMapLongClick(getRootView().getId(), latLng);
 			}
 		});
 	}
@@ -238,7 +236,7 @@ public class Controller_GoogleMap
 		dispatchEvent("Map event MAP_MARKER_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
 			@Override
 			public void process(OnMapClicks listener) {
-				listener.mOnMarkerClickListener(getRootView().getId(), marker);
+				listener.onMarkerClick(getRootView().getId(), marker);
 			}
 		});
 		return true;
@@ -249,7 +247,7 @@ public class Controller_GoogleMap
 		dispatchEvent("Map event MAP_INFO_WINDOW_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
 			@Override
 			public void process(OnMapClicks listener) {
-				listener.mOnInfoWindowClickListener(getRootView().getId(), marker);
+				listener.onInfoWindowClick(getRootView().getId(), marker);
 			}
 		});
 	}
