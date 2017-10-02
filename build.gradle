@@ -1,11 +1,20 @@
 /*
- * Copyright (c) 2017 to Adam van der Kruk (Zehavi) AKA TacB0sS - Nu-Art Software
+ * The google-maps module, is an implementation of Google Maps SDK
+ * for Android, allowing you to use the power of Cyborg, with Google Maps.
  *
- * This software code is not an 'Open Source'!
- * In order to use this code you MUST have a proper license.
- * In order to obtain a licence please contact me directly.
+ * Copyright (C) 2017  Adam van der Kruk aka TacB0sS
  *
- * Email: Adam.Zehavi@Nu-Art-Software.com
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 apply plugin: 'com.android.library'
 
@@ -13,10 +22,10 @@ android {
     compileSdkVersion 23
     apply from: '../dev-tools/gradle/common-cyborg-lib.gradle'
 }
-//
-//if (project.hasProperty("configureUploadJavaArtifact")) {
-//    configureUploadJavaArtifact("com.nu-art-software.cyborg", "nu-art/${name}")
-//}
+
+if (project.hasProperty("configureUploadJavaArtifact")) {
+    configureUploadJavaArtifact("com.nu-art-software.cyborg", "nu-art/${name}")
+}
 
 dependencies {
     compile(resolveDependency('cyborg-core', 'com.nu-art-software.cyborg', "${DEFAULT_DEPENDENCY_VERSION}"))
