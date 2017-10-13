@@ -56,7 +56,7 @@ public class Controller_GoogleMap
 
 	public static class MapMarker {
 
-		private LatLng position;
+		public LatLng position;
 
 		private float color;
 
@@ -188,14 +188,13 @@ public class Controller_GoogleMap
 		mGoogleMap.moveCamera(newLocation);
 	}
 
-	public void addMarker(MapMarker mapMarker) {
+	public Marker addMarker(MapMarker mapMarker) {
 		MarkerOptions markerOptions = new MarkerOptions().position(mapMarker.position)
 																										 .title(mapMarker.title)
 																										 .icon(BitmapDescriptorFactory.defaultMarker(mapMarker.color));
 		markers.add(mapMarker);
 
-		Marker marker = mGoogleMap.addMarker(markerOptions);
-		mapMarker.marker = marker;
+		return mapMarker.marker = mGoogleMap.addMarker(markerOptions);
 	}
 
 	private void updateRoutesOnMap(PolylineOptions rectLine) {
