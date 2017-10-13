@@ -54,15 +54,32 @@ public class Controller_GoogleMap
 		extends CyborgController
 		implements OnLocationUpdatedListener, OnMapReadyCallback, OnMapClickListener, OnMapLongClickListener, OnMarkerClickListener, OnInfoWindowClickListener {
 
+	public static class MapMarker {
+
+		private LatLng position;
+
+		private float color;
+
+		private String title;
+
+		private Marker marker;
+
+		public MapMarker(LatLng position, float color, String title) {
+			this.position = position;
+			this.color = color;
+			this.title = title;
+		}
+	}
+
 	private MapFragment mapFragment;
 
 	private GoogleMap mGoogleMap;
 
 	private Marker myMarker;
 
-	private ArrayList<Marker> allNonStickyMarker = new ArrayList<>();
+	private ArrayList<MapMarker> markers = new ArrayList<>();
 
-	private PolylineOptions rectLine;
+	//	private PolylineOptions rectLine;
 
 	private Polyline polyline;
 
@@ -70,14 +87,6 @@ public class Controller_GoogleMap
 	 * Range is between 2 to 21
 	 */
 	private int cameraZoom = 16;
-
-	private final String USER_POSITION_INFO = "You're here";
-
-	private final String TARGET_LOCATION_INFO = "Remove marker";
-
-	private final float DEFAULT_TARGET_MARKER_COLOR = BitmapDescriptorFactory.HUE_GREEN;
-
-	private final float DEFAULT_USER_MARKER = BitmapDescriptorFactory.HUE_AZURE;
 
 	private int mapLayoutId;
 
@@ -88,17 +97,11 @@ public class Controller_GoogleMap
 	@Override
 	protected void onCreate() {
 		super.onCreate();
-
-		rectLine = new PolylineOptions().width(3).color(Color.RED);
 		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setMapFragmentId();
 	}
 
 	private void setMapFragmentId() {
-		if (mGoogleMap != null) {
-			removeAllMarkers();
-		}
-
 		Random random = new Random();
 		while (getActivity().findViewById(mapLayoutId = Math.abs(random.nextInt())) != null)
 			;
@@ -108,6 +111,10 @@ public class Controller_GoogleMap
 		((ViewGroup) getRootView()).addView(fl);
 		fl.setId(mapLayoutId);
 		getActivity().findViewById(fl.getId());
+	}
+
+	private void removeAllMarkers() {
+
 	}
 
 	@Override
@@ -132,36 +139,18 @@ public class Controller_GoogleMap
 		mapFragment.getMapAsync(Controller_GoogleMap.this);
 	}
 
-	/**
-	 * Removes all Markers from the map and list and then updates the map view
-	 */
-	public void removeAllMarkers() {
-		while (!allNonStickyMarker.isEmpty()) {
-			allNonStickyMarker.remove(0).remove();
-		}
-		updateRoute();
-	}
-
-	/**
-	 * Removes the given <b>list Marker</b> from both the map and list and then updates the map view
-	 */
-	public void removeMarker(Marker marker) {
-		if (allNonStickyMarker.remove(marker)) {
-			marker.remove();
-		}
-
+	public void removeMarker(MapMarker marker) {
+		markers.remove(marker);
 		updateRoute();
 	}
 
 	private void updateRoute() {
-		rectLine = new PolylineOptions().width(5).color(Color.RED);
-		for (int i = 0; i < allNonStickyMarker.size(); i++) {
-			Marker marker = allNonStickyMarker.get(i);
-			rectLine.add(marker.getPosition());
-			addMarker(marker.getPosition(), DEFAULT_TARGET_MARKER_COLOR, TARGET_LOCATION_INFO);
+		PolylineOptions polyline = new PolylineOptions().width(3).color(Color.RED);
+		for (MapMarker marker : markers) {
+			polyline.add(marker.position);
 		}
 
-		updateRoutesOnMap();
+		updateRoutesOnMap(polyline);
 	}
 
 	@Override
@@ -179,9 +168,9 @@ public class Controller_GoogleMap
 		mGoogleMap.setOnMarkerClickListener(this);
 		mGoogleMap.setOnInfoWindowClickListener(this);
 		updateRoute();
-		dispatchEvent("Map event MAP_READY was called.", MyOnMapReadyCallback.class, new Processor<MyOnMapReadyCallback>() {
+		dispatchEvent("Map is ready.", OnMapReadyListener.class, new Processor<OnMapReadyListener>() {
 			@Override
-			public void process(MyOnMapReadyCallback listener) {
+			public void process(OnMapReadyListener listener) {
 				listener.onMapReady(getRootView().getId());
 			}
 		});
@@ -197,34 +186,19 @@ public class Controller_GoogleMap
 
 		CameraUpdate newLocation = CameraUpdateFactory.newLatLngZoom(position, cameraZoom);
 		mGoogleMap.moveCamera(newLocation);
-		addStickyMarker(position);
 	}
 
-	public void addStickyMarker(LatLng position) {
-		if (myMarker != null)
-			myMarker.remove();
+	public void addMarker(MapMarker mapMarker) {
+		MarkerOptions markerOptions = new MarkerOptions().position(mapMarker.position)
+																										 .title(mapMarker.title)
+																										 .icon(BitmapDescriptorFactory.defaultMarker(mapMarker.color));
+		markers.add(mapMarker);
 
-		myMarker = addMarker(position, DEFAULT_USER_MARKER, USER_POSITION_INFO);
+		Marker marker = mGoogleMap.addMarker(markerOptions);
+		mapMarker.marker = marker;
 	}
 
-	public void addTargetMarker(LatLng position) {
-		Marker marker = addMarker(position, DEFAULT_TARGET_MARKER_COLOR, TARGET_LOCATION_INFO);
-		allNonStickyMarker.add(marker);
-		addMarkerToRoute(marker);
-	}
-
-	private Marker addMarker(LatLng position, float color, String title) {
-		MarkerOptions markerOptions = new MarkerOptions().position(position).title(title).icon(BitmapDescriptorFactory.defaultMarker(color));
-		return mGoogleMap.addMarker(markerOptions);
-	}
-
-	private void addMarkerToRoute(Marker marker) {
-		rectLine.add(marker.getPosition());
-
-		updateRoutesOnMap();
-	}
-
-	private void updateRoutesOnMap() {
+	private void updateRoutesOnMap(PolylineOptions rectLine) {
 		if (polyline != null)
 			polyline.remove();
 		polyline = mGoogleMap.addPolyline(rectLine);
