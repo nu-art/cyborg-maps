@@ -141,7 +141,6 @@ public class Controller_GoogleMap
 
 	public void removeMarker(MapMarker marker) {
 		markers.remove(marker);
-		updateRoute();
 	}
 
 	private void updateRoute() {
@@ -167,7 +166,6 @@ public class Controller_GoogleMap
 		mGoogleMap.setOnMapLongClickListener(this);
 		mGoogleMap.setOnMarkerClickListener(this);
 		mGoogleMap.setOnInfoWindowClickListener(this);
-		updateRoute();
 		dispatchEvent("Map is ready.", OnMapReadyListener.class, new Processor<OnMapReadyListener>() {
 			@Override
 			public void process(OnMapReadyListener listener) {
