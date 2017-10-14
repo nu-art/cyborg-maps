@@ -205,9 +205,9 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onMapClick(final LatLng latLng) {
-		dispatchEvent("Map event MAP_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
+		dispatchEvent("Map event MAP_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
 			@Override
-			public void process(OnMapClicks listener) {
+			public void process(OnGoogleMapListener listener) {
 				listener.onMapClick(getRootView().getId(), latLng);
 			}
 		});
@@ -215,9 +215,9 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onMapLongClick(final LatLng latLng) {
-		dispatchEvent("Map event MAP_LONG_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
+		dispatchEvent("Map event MAP_LONG_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
 			@Override
-			public void process(OnMapClicks listener) {
+			public void process(OnGoogleMapListener listener) {
 				listener.onMapLongClick(getRootView().getId(), latLng);
 			}
 		});
@@ -225,9 +225,9 @@ public class Controller_GoogleMap
 
 	@Override
 	public boolean onMarkerClick(final Marker marker) {
-		dispatchEvent("Map event MAP_MARKER_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
+		dispatchEvent("Map event MAP_MARKER_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
 			@Override
-			public void process(OnMapClicks listener) {
+			public void process(OnGoogleMapListener listener) {
 				listener.onMarkerClick(getRootView().getId(), marker);
 			}
 		});
@@ -236,9 +236,9 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onInfoWindowClick(final Marker marker) {
-		dispatchEvent("Map event MAP_INFO_WINDOW_CLICK was called.", OnMapClicks.class, new Processor<OnMapClicks>() {
+		dispatchEvent("Map event MAP_INFO_WINDOW_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
 			@Override
-			public void process(OnMapClicks listener) {
+			public void process(OnGoogleMapListener listener) {
 				listener.onInfoWindowClick(getRootView().getId(), marker);
 			}
 		});

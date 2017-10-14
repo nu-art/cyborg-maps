@@ -22,7 +22,7 @@ package com.nu.art.cyborg.maps.google;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-public interface OnMapClicks {
+public interface OnGoogleMapListener {
 
 	void onMapClick(int controllerId, LatLng latLng);
 
