@@ -159,6 +159,11 @@ public class Controller_GoogleMap
 	}
 
 	@Override
+	public void onLocationUpdateError() {
+
+	}
+
+	@Override
 	public void onMapReady(GoogleMap googleMap) {
 		mGoogleMap = googleMap;
 		googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
