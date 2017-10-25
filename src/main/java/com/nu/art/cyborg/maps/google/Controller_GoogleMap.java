@@ -22,6 +22,7 @@ package com.nu.art.cyborg.maps.google;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.view.ViewGroup;
@@ -35,10 +36,14 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -62,18 +67,21 @@ public class Controller_GoogleMap
 
 		private String title;
 
+		private int iconRes;
+
 		private Marker marker;
 
-		public MapMarker(LatLng position, float color, String title) {
+		public MapMarker(LatLng position, float color, String title, int iconRes) {
 			this.position = position;
 			this.color = color;
 			this.title = title;
+			this.iconRes = iconRes;
 		}
 	}
 
 	private MapFragment mapFragment;
 
-	private GoogleMap mGoogleMap;
+	private GoogleMap googleMap;
 
 	private Marker myMarker;
 
@@ -101,6 +109,11 @@ public class Controller_GoogleMap
 		setMapFragmentId();
 	}
 
+	@Override
+	protected void onDestroy() {
+		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+	}
+
 	private void setMapFragmentId() {
 		Random random = new Random();
 		while (getActivity().findViewById(mapLayoutId = Math.abs(random.nextInt())) != null)
@@ -114,20 +127,33 @@ public class Controller_GoogleMap
 	}
 
 	private void removeAllMarkers() {
-
+		googleMap.clear();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+	public void showMap() {
+		showMap(null);
+	}
+
+	/**
+	 * Show the map and pass initial map options.
+	 *
+	 * @param mapOptions a GoogleMapOptions object
+	 *
+	 * @see <a href="https://developers.google.com/maps/documentation/android-api/map#programmatically">Map options</a>
+	 */
+	public void showMap(GoogleMapOptions mapOptions) {
+		if (mapFragment != null)
+			return;
+
+		if (mapOptions == null)
+			mapFragment = MapFragment.newInstance();
+		else
+			mapFragment = MapFragment.newInstance(mapOptions);
+
 		addMapFragmentToViewHierarchy();
 	}
 
 	private void addMapFragmentToViewHierarchy() {
-		if (mapFragment != null)
-			return;
-
-		mapFragment = MapFragment.newInstance();
 		final FragmentManager fm = getActivity().getFragmentManager();
 
 		if (getActivity().findViewById(mapLayoutId) == null)
@@ -137,6 +163,63 @@ public class Controller_GoogleMap
 		ft.replace(mapLayoutId, mapFragment, "map-fragment-" + mapLayoutId);
 		ft.commit();
 		mapFragment.getMapAsync(Controller_GoogleMap.this);
+	}
+
+	public UiSettings getUiSettings() {
+		if (googleMap == null) {
+			logError("Need to call showMap() before accessing the map ui settings");
+			return null;
+		}
+
+		return googleMap.getUiSettings();
+	}
+
+	/**
+	 * Set the map type
+	 *
+	 * @param mapType for example {@link GoogleMap#MAP_TYPE_NORMAL}
+	 */
+	public void setMapType(int mapType) {
+		googleMap.setMapType(mapType);
+	}
+
+	/**
+	 * Set the map style
+	 *
+	 * @param mapStyle example - setMapStyle(MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.map_style_default))
+	 *
+	 * @see <a href="https://developers.google.com/maps/documentation/android-api/styling#pass_a_json_style_object_to_your_map">Map styling</a>
+	 */
+	public void setMapStyle(MapStyleOptions mapStyle) {
+		try {
+			// Customise the styling of the base map using a JSON object defined
+			// in a raw resource file.
+			boolean success = googleMap.setMapStyle(mapStyle);
+
+			if (!success) {
+				logError("Style parsing failed.");
+			}
+		} catch (Resources.NotFoundException e) {
+			logError("Can't find map style. Error: ", e);
+		}
+	}
+
+	/**
+	 * @param locationButtonClickListener supply a click listener for the 'my location' button
+	 *
+	 * @see <a href="https://developers.google.com/maps/documentation/android-api/location#the_my_location_layer">Adding 'may location' layer</a>
+	 */
+	@SuppressWarnings("MissingPermission")
+	public void showMyLocationIndicatorAndButton(OnMyLocationButtonClickListener locationButtonClickListener) {
+		googleMap.setMyLocationEnabled(true);
+
+		if (locationButtonClickListener != null)
+			googleMap.setOnMyLocationButtonClickListener(locationButtonClickListener);
+	}
+
+	@SuppressWarnings("MissingPermission")
+	public void hideMyLocationIndicatorAndButton() {
+		googleMap.setMyLocationEnabled(false);
 	}
 
 	public void removeMarker(MapMarker marker) {
@@ -154,8 +237,7 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onLocationUpdated(Location location) {
-		LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-		setCameraLocation(myPosition);
+
 	}
 
 	@Override
@@ -165,12 +247,12 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onMapReady(GoogleMap googleMap) {
-		mGoogleMap = googleMap;
-		googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-		mGoogleMap.setOnMapClickListener(this);
-		mGoogleMap.setOnMapLongClickListener(this);
-		mGoogleMap.setOnMarkerClickListener(this);
-		mGoogleMap.setOnInfoWindowClickListener(this);
+		this.googleMap = googleMap;
+		googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		this.googleMap.setOnMapClickListener(this);
+		this.googleMap.setOnMapLongClickListener(this);
+		this.googleMap.setOnMarkerClickListener(this);
+		this.googleMap.setOnInfoWindowClickListener(this);
 		dispatchEvent("Map is ready.", OnMapReadyListener.class, new Processor<OnMapReadyListener>() {
 			@Override
 			public void process(OnMapReadyListener listener) {
@@ -183,27 +265,29 @@ public class Controller_GoogleMap
 		this.cameraZoom = cameraZoom;
 	}
 
-	public void setCameraLocation(LatLng position) {
+	public void setCameraLocation(LatLng position, boolean animate) {
 		if (position == null)
 			return;
 
 		CameraUpdate newLocation = CameraUpdateFactory.newLatLngZoom(position, cameraZoom);
-		mGoogleMap.moveCamera(newLocation);
+		if (animate)
+			googleMap.animateCamera(newLocation);
+		else
+			googleMap.moveCamera(newLocation);
 	}
 
 	public Marker addMarker(MapMarker mapMarker) {
-		MarkerOptions markerOptions = new MarkerOptions().position(mapMarker.position)
-																										 .title(mapMarker.title)
-																										 .icon(BitmapDescriptorFactory.defaultMarker(mapMarker.color));
+		MarkerOptions markerOptions = new MarkerOptions().position(mapMarker.position).title(mapMarker.title)
+				.icon(mapMarker.iconRes == 0 ? BitmapDescriptorFactory.defaultMarker(mapMarker.color) : BitmapDescriptorFactory.fromResource(mapMarker.iconRes));
 		markers.add(mapMarker);
 
-		return mapMarker.marker = mGoogleMap.addMarker(markerOptions);
+		return mapMarker.marker = googleMap.addMarker(markerOptions);
 	}
 
 	private void updateRoutesOnMap(PolylineOptions rectLine) {
 		if (polyline != null)
 			polyline.remove();
-		polyline = mGoogleMap.addPolyline(rectLine);
+		polyline = googleMap.addPolyline(rectLine);
 	}
 
 	@Override
