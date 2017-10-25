@@ -42,6 +42,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -261,11 +262,19 @@ public class Controller_GoogleMap
 		});
 	}
 
-	public void setCameraZoom(int cameraZoom) {
+	public void setDefaultCameraZoom(int cameraZoom) {
 		this.cameraZoom = cameraZoom;
 	}
 
+	public CameraPosition getCameraPosition() {
+		return googleMap.getCameraPosition();
+	}
+
 	public void setCameraLocation(LatLng position, boolean animate) {
+		setCameraLocation(position, cameraZoom, animate);
+	}
+
+	public void setCameraLocation(LatLng position, int cameraZoom, boolean animate) {
 		if (position == null)
 			return;
 
