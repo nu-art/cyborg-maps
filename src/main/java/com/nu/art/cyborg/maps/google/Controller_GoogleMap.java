@@ -227,7 +227,7 @@ public class Controller_GoogleMap
 		markers.remove(marker);
 	}
 
-	private void updateRoute() {
+	public void updateRoute() {
 		PolylineOptions polyline = new PolylineOptions().width(3).color(Color.RED);
 		for (MapMarker marker : markers) {
 			polyline.add(marker.position);
@@ -291,6 +291,10 @@ public class Controller_GoogleMap
 		markers.add(mapMarker);
 
 		return mapMarker.marker = googleMap.addMarker(markerOptions);
+	}
+
+	public void addPolyline(PolylineOptions polylineOption) {
+		googleMap.addPolyline(polylineOption);
 	}
 
 	private void updateRoutesOnMap(PolylineOptions rectLine) {
