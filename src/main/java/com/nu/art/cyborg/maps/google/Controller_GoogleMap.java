@@ -254,7 +254,7 @@ public class Controller_GoogleMap
 		this.googleMap.setOnMapLongClickListener(this);
 		this.googleMap.setOnMarkerClickListener(this);
 		this.googleMap.setOnInfoWindowClickListener(this);
-		dispatchEvent("Map is ready.", OnMapReadyListener.class, new Processor<OnMapReadyListener>() {
+		dispatchEvent("Map is ready.", new Processor<OnMapReadyListener>() {
 			@Override
 			public void process(OnMapReadyListener listener) {
 				listener.onMapReady(getRootView().getId());
@@ -305,7 +305,7 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onMapClick(final LatLng latLng) {
-		dispatchEvent("Map event MAP_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
+		dispatchEvent("Map event MAP_CLICK was called.", new Processor<OnGoogleMapListener>() {
 			@Override
 			public void process(OnGoogleMapListener listener) {
 				listener.onMapClick(getRootView().getId(), latLng);
@@ -315,7 +315,7 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onMapLongClick(final LatLng latLng) {
-		dispatchEvent("Map event MAP_LONG_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
+		dispatchEvent("Map event MAP_LONG_CLICK was called.", new Processor<OnGoogleMapListener>() {
 			@Override
 			public void process(OnGoogleMapListener listener) {
 				listener.onMapLongClick(getRootView().getId(), latLng);
@@ -325,7 +325,7 @@ public class Controller_GoogleMap
 
 	@Override
 	public boolean onMarkerClick(final Marker marker) {
-		dispatchEvent("Map event MAP_MARKER_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
+		dispatchEvent("Map event MAP_MARKER_CLICK was called.", new Processor<OnGoogleMapListener>() {
 			@Override
 			public void process(OnGoogleMapListener listener) {
 				listener.onMarkerClick(getRootView().getId(), marker);
@@ -336,7 +336,7 @@ public class Controller_GoogleMap
 
 	@Override
 	public void onInfoWindowClick(final Marker marker) {
-		dispatchEvent("Map event MAP_INFO_WINDOW_CLICK was called.", OnGoogleMapListener.class, new Processor<OnGoogleMapListener>() {
+		dispatchEvent("Map event MAP_INFO_WINDOW_CLICK was called.", new Processor<OnGoogleMapListener>() {
 			@Override
 			public void process(OnGoogleMapListener listener) {
 				listener.onInfoWindowClick(getRootView().getId(), marker);
