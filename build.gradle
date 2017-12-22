@@ -19,7 +19,6 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
     apply from: '../dev-tools/gradle/common-cyborg-lib.gradle'
 }
 
@@ -29,5 +28,5 @@ if (project.hasProperty("configureUploadAndroidLibArtifact")) {
 
 dependencies {
     compile(resolveDependency('cyborg-core', 'com.nu-art-software.cyborg', "${NU_ART_VERSION}"))
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile "com.google.android.gms:play-services-maps:${GMS_VERSION}"
 }
