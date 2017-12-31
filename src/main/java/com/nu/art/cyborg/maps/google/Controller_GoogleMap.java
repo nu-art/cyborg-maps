@@ -24,7 +24,6 @@ import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.location.Location;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -51,14 +50,13 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.nu.art.core.generics.Processor;
 import com.nu.art.cyborg.core.CyborgController;
-import com.nu.art.cyborg.modules.LocationModule.OnLocationUpdatedListener;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Controller_GoogleMap
 		extends CyborgController
-		implements OnLocationUpdatedListener, OnMapReadyCallback, OnMapClickListener, OnMapLongClickListener, OnMarkerClickListener, OnInfoWindowClickListener {
+		implements OnMapReadyCallback, OnMapClickListener, OnMapLongClickListener, OnMarkerClickListener, OnInfoWindowClickListener {
 
 	public static class MapMarker {
 
@@ -234,16 +232,6 @@ public class Controller_GoogleMap
 		}
 
 		updateRoutesOnMap(polyline);
-	}
-
-	@Override
-	public void onLocationUpdated(Location location) {
-
-	}
-
-	@Override
-	public void onLocationUpdateError() {
-
 	}
 
 	@Override
