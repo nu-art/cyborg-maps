@@ -55,8 +55,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Controller_GoogleMap
-		extends CyborgController
-		implements OnMapReadyCallback, OnMapClickListener, OnMapLongClickListener, OnMarkerClickListener, OnInfoWindowClickListener {
+	extends CyborgController
+	implements OnMapReadyCallback, OnMapClickListener, OnMapLongClickListener, OnMarkerClickListener, OnInfoWindowClickListener {
 
 	public static class MapMarker {
 
@@ -274,8 +274,10 @@ public class Controller_GoogleMap
 	}
 
 	public Marker addMarker(MapMarker mapMarker) {
-		MarkerOptions markerOptions = new MarkerOptions().position(mapMarker.position).title(mapMarker.title)
-				.icon(mapMarker.iconRes == 0 ? BitmapDescriptorFactory.defaultMarker(mapMarker.color) : BitmapDescriptorFactory.fromResource(mapMarker.iconRes));
+		MarkerOptions markerOptions = new MarkerOptions().position(mapMarker.position)
+		                                                 .title(mapMarker.title)
+		                                                 .icon(mapMarker.iconRes == 0 ? BitmapDescriptorFactory.defaultMarker(mapMarker.color)
+		                                                                              : BitmapDescriptorFactory.fromResource(mapMarker.iconRes));
 		markers.add(mapMarker);
 
 		return mapMarker.marker = googleMap.addMarker(markerOptions);
