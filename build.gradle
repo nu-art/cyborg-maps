@@ -17,10 +17,14 @@
  * limitations under the License.
  */
 
-applyAndroidLibrary("com.nu-art-software.cyborg", "nu-art")
+applyAndroidLibrary()
 
 dependencies {
     api(resolveDependency('cyborg-core', 'com.nu-art-software.cyborg', "${NU_ART_VERSION}"))
 
     api "com.google.android.gms:play-services-maps:${GMS_VERSION}"
+}
+
+if (project.hasProperty("addTask_DeployAndroidArtifactToCentral")) {
+    addTask_DeployAndroidArtifactToCentral("com.nu-art-software.cyborg", "nu-art")
 }
