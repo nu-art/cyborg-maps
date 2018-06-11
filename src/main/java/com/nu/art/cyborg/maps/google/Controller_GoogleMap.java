@@ -21,7 +21,6 @@ package com.nu.art.cyborg.maps.google;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.ViewGroup;
@@ -104,13 +103,7 @@ public class Controller_GoogleMap
 	@Override
 	protected void onCreate() {
 		super.onCreate();
-		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setMapFragmentId();
-	}
-
-	@Override
-	protected void onDestroy() {
-		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 	}
 
 	private void setMapFragmentId() {
