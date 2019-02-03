@@ -22,7 +22,10 @@ applyAndroidLibrary()
 dependencies {
     implementation(resolveDependency('cyborg-core', 'com.nu-art-software.cyborg', "${NU_ART_VERSION}"))
 
-    implementation "com.google.android.gms:play-services-maps:16.0.0"
+    api("com.google.android.gms:play-services-maps:16.0.0") {
+        exclude group: "com.android.support"
+        exclude group: "android.arch.lifecycle", module: 'runtime'
+    }
 }
 
 if (project.hasProperty("addTask_DeployAndroidArtifactToCentral")) {
