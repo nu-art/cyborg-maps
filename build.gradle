@@ -22,7 +22,7 @@ applyAndroidLibrary()
 dependencies {
     implementation(resolveDependency('cyborg-core', 'com.nu-art-software.cyborg', "${NU_ART_VERSION}"))
 
-    api "com.google.android.gms:play-services-maps:${GMS_VERSION}"
+    implementation "com.google.android.gms:play-services-maps:16.0.0"
 }
 
 if (project.hasProperty("addTask_DeployAndroidArtifactToCentral")) {
